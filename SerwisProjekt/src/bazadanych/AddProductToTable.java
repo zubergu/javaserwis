@@ -53,10 +53,7 @@ public class AddProductToTable extends AbstractAction {
         	name = field1.getText();
         	try {
         		price = Double.parseDouble(field2.getText());
-        	} catch(NumberFormatException e) {
-        		JOptionPane.showMessageDialog(frame, "Price is in wrong format");
-        	}
-			try {
+        		
 				PreparedStatement preparedStatement = products.getConnection().prepareStatement("insert into products values(NULL,?,?,?)");
 				preparedStatement.setString(1,name);
 				preparedStatement.setInt(2,0);
@@ -80,8 +77,9 @@ public class AddProductToTable extends AbstractAction {
 				model.addRow(new Object[] {newProductId,name,0,price });
 				JOptionPane.showMessageDialog(frame, "Product "+name+" added.");
 				//model.fireTableDataChanged();
-				
-			} catch (SQLException e) {
+        	} catch(NumberFormatException e) {
+        		JOptionPane.showMessageDialog(frame, "Price is in wrong format");
+        	} catch (SQLException e) {
 				JOptionPane.showMessageDialog(frame, "Couldn't add product to database.");
 				
 			}

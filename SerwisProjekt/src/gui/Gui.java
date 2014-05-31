@@ -18,7 +18,9 @@ import akcje.ZalogujClerk;
 import bazadanych.AddProductToTable;
 import bazadanych.AddUserToTable;
 import bazadanych.ProductsToTable;
+import bazadanych.RemoveProductFromTable;
 import bazadanych.RemoveUserFromTable;
+import bazadanych.UpdateProductInTable;
 import bazadanych.UsersToTable;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -256,10 +258,12 @@ public class Gui implements WindowListener{
 		
 		JButton btnUsunProdukt = new JButton("Usun");
 		btnUsunProdukt.setBounds(384, 237, 75, 25);
+		btnUsunProdukt.addActionListener(new RemoveProductFromTable(products, frmSerwis,tableProducts));
 		panelAdminZ.add(btnUsunProdukt);
 		
 		JButton btnZmienProdukt = new JButton("Zmien");
 		btnZmienProdukt.setBounds(479, 237, 75, 25);
+		btnZmienProdukt.addActionListener(new UpdateProductInTable(products, frmSerwis,tableProducts));
 		panelAdminZ.add(btnZmienProdukt);
 		
 		JButton btnDodajProdukt = new JButton("Dodaj produkt");
