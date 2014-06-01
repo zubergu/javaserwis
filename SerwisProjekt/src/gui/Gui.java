@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import obsluga.Orders;
 import obsluga.Products;
 import obsluga.UserRole;
 import obsluga.Users;
@@ -17,6 +18,7 @@ import akcje.ZalogujAdmin;
 import akcje.ZalogujClerk;
 import bazadanych.AddProductToTable;
 import bazadanych.AddUserToTable;
+import bazadanych.OrdersToTable;
 import bazadanych.ProductsToTable;
 import bazadanych.RemoveProductFromTable;
 import bazadanych.RemoveUserFromTable;
@@ -64,8 +66,10 @@ public class Gui implements WindowListener{
 	private JPasswordField passwordField;
 	private Users users;
 	private Products products;
+	private Orders orders;
 	private JTable tableUsers;
 	private JTable tableProducts;
+	private JTable tableOrders;
 
 	/**
 	 * Launch the application.
@@ -89,10 +93,12 @@ public class Gui implements WindowListener{
 	public Gui() {
 		this.users = new Users();
 		this.products = new Products();
+		this.orders = new Orders();
 		initialize();
 		try {
 			UsersToTable.populateTableUsersFromDatabase(users, (DefaultTableModel) tableUsers.getModel(), users.getConnection());
 			ProductsToTable.populateTableProductsFromDatabase(products, (DefaultTableModel)tableProducts.getModel(), products.getConnection());
+			OrdersToTable.populateTableOrdersFromDatabase(orders, (DefaultTableModel)tableOrders.getModel(), orders.getConnection());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,16 +154,53 @@ public class Gui implements WindowListener{
 		
 		JPanel panelSprzedawcaZ = new JPanel();
 		cardPanel.add(panelSprzedawcaZ, "panelSprzedawcaZ");
+		panelSprzedawcaZ.setLayout(null);
 		
 		JButton btnNierozliczoneZlecenia = new JButton("Nierozliczone zlecenia");
+		btnNierozliczoneZlecenia.setBounds(48, 5, 193, 25);
 		panelSprzedawcaZ.add(btnNierozliczoneZlecenia);
 		
 		JButton btnStanZlecenia = new JButton("Stan zlecenia");
+		btnStanZlecenia.setBounds(246, 5, 130, 25);
 		panelSprzedawcaZ.add(btnStanZlecenia);
 		
 		JButton btnNoweZlecenie = new JButton("Nowe zlecenie");
+		btnNoweZlecenie.setBounds(381, 5, 137, 25);
 		btnNoweZlecenie.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelSprzedawcaZ.add(btnNoweZlecenie);
+		
+		JScrollPane scrollPaneOrders = new JScrollPane();
+		scrollPaneOrders.setBounds(12, 40, 424, 208);
+		panelSprzedawcaZ.add(scrollPaneOrders);
+		
+		tableOrders = new JTable();
+		DefaultTableModel ordersTableModel = new DefaultTableModel();
+		String[] headersOrdersTable ={"order_id",
+				"customer",
+				"order_type",
+				"description",
+				"order_status",
+				"order_handler",
+				"display",
+				"keyboard",
+				"mouse",
+				"os",
+				"processor",
+				"mainboard", 
+				"speakers",
+				"graphics",
+				"GPS",
+				"bluetooth",
+				"hdd" ,
+				"dvd_rom",
+				"ram", 
+				"other"};
+		ordersTableModel.setColumnIdentifiers(headersOrdersTable);
+		tableOrders.setModel(ordersTableModel);
+		tableOrders.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		tableOrders.setFillsViewportHeight(true);
+		tableOrders.setBorder(new LineBorder(new Color(0, 0, 0)));
+		scrollPaneOrders.setViewportView(tableOrders);
 		
 		JPanel panelSprzedawcaNz = new JPanel();
 		cardPanel.add(panelSprzedawcaNz, "panelSprzedawcaNz");
@@ -326,6 +369,7 @@ public class Gui implements WindowListener{
 	public void windowClosing(WindowEvent e) {
 		this.users.closeConnection();
 		this.products.closeConnection();
+		this.orders.closeConnection();
 		
 	}
 
