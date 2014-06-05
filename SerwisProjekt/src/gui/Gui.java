@@ -16,12 +16,21 @@ import akcje.PrzelaczNaPanelSprzedawca;
 import akcje.Wyloguj;
 import akcje.ZalogujAdmin;
 import akcje.ZalogujClerk;
+import bazadanych.AddOrderToTable;
 import bazadanych.AddProductToTable;
 import bazadanych.AddUserToTable;
+import bazadanych.CheckOrderStatus;
+import bazadanych.DisplayOrderInfo;
+import bazadanych.ListOrdersForUser;
+import bazadanych.ListUnassignedOrders;
+import bazadanych.ListUnfinishedOrders;
 import bazadanych.OrdersToTable;
 import bazadanych.ProductsToTable;
 import bazadanych.RemoveProductFromTable;
 import bazadanych.RemoveUserFromTable;
+import bazadanych.SetOrderHandler;
+import bazadanych.SetOrderStatusToFinished;
+import bazadanych.SetOrderStatusToImpossible;
 import bazadanych.UpdateProductInTable;
 import bazadanych.UsersToTable;
 
@@ -202,6 +211,9 @@ public class Gui implements WindowListener{
 		tableOrders.setBorder(new LineBorder(new Color(0, 0, 0)));
 		scrollPaneOrders.setViewportView(tableOrders);
 		
+		btnNoweZlecenie.addActionListener(new AddOrderToTable(orders,frmSerwis,tableOrders));
+		btnStanZlecenia.addActionListener(new CheckOrderStatus(orders,frmSerwis,tableOrders));
+		btnNierozliczoneZlecenia.addActionListener(new ListUnfinishedOrders(orders,frmSerwis,tableOrders));
 		JPanel panelSprzedawcaNz = new JPanel();
 		cardPanel.add(panelSprzedawcaNz, "panelSprzedawcaNz");
 		
@@ -213,9 +225,9 @@ public class Gui implements WindowListener{
 		cardPanel.add(panelSerwisZ, "panelSerwisZ");
 		GridBagLayout gbl_panelSerwisZ = new GridBagLayout();
 		gbl_panelSerwisZ.columnWidths = new int[]{119, 185, 0};
-		gbl_panelSerwisZ.rowHeights = new int[]{25, 0, 0, 0, 0};
+		gbl_panelSerwisZ.rowHeights = new int[]{25, 0, 0, 0, 0, 0, 0};
 		gbl_panelSerwisZ.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelSerwisZ.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelSerwisZ.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panelSerwisZ.setLayout(gbl_panelSerwisZ);
 		
 		JButton btnSerwisantbuttontest = new JButton("Wez zlecenie");
@@ -226,12 +238,17 @@ public class Gui implements WindowListener{
 		gbc_btnSerwisantbuttontest.gridy = 0;
 		panelSerwisZ.add(btnSerwisantbuttontest, gbc_btnSerwisantbuttontest);
 		
+		 btnSerwisantbuttontest.addActionListener(new SetOrderHandler(orders,frmSerwis,tableOrders));
+		
+		
 		JButton btnUstawZlecenieNa = new JButton("Ustaw zlecenie na zakonczone");
 		GridBagConstraints gbc_btnUstawZlecenieNa = new GridBagConstraints();
 		gbc_btnUstawZlecenieNa.insets = new Insets(0, 0, 5, 0);
 		gbc_btnUstawZlecenieNa.gridx = 1;
 		gbc_btnUstawZlecenieNa.gridy = 1;
 		panelSerwisZ.add(btnUstawZlecenieNa, gbc_btnUstawZlecenieNa);
+		
+		btnUstawZlecenieNa.addActionListener(new SetOrderStatusToFinished(orders,frmSerwis,tableOrders));
 		
 		JButton btnZlecenieNieDo = new JButton("Zlecenie nie do wykonania.");
 		GridBagConstraints gbc_btnZlecenieNieDo = new GridBagConstraints();
@@ -240,11 +257,32 @@ public class Gui implements WindowListener{
 		gbc_btnZlecenieNieDo.gridy = 2;
 		panelSerwisZ.add(btnZlecenieNieDo, gbc_btnZlecenieNieDo);
 		
-		JButton btnZwolnijZlecenie = new JButton("Zwolnij zlecenie");
-		GridBagConstraints gbc_btnZwolnijZlecenie = new GridBagConstraints();
-		gbc_btnZwolnijZlecenie.gridx = 1;
-		gbc_btnZwolnijZlecenie.gridy = 3;
-		panelSerwisZ.add(btnZwolnijZlecenie, gbc_btnZwolnijZlecenie);
+		btnZlecenieNieDo.addActionListener(new SetOrderStatusToImpossible(orders,frmSerwis,tableOrders));
+		
+		JButton btnListaZlecen = new JButton("Lista zlecen uzytkownika");
+		GridBagConstraints gbc_btnListaZlecen = new GridBagConstraints();
+		gbc_btnListaZlecen.insets = new Insets(0, 0, 5, 0);
+		gbc_btnListaZlecen.gridx = 1;
+		gbc_btnListaZlecen.gridy = 3;
+		panelSerwisZ.add(btnListaZlecen, gbc_btnListaZlecen);
+		
+		btnListaZlecen.addActionListener(new ListOrdersForUser(orders,frmSerwis,tableOrders));
+		
+		JButton btnInfoZlecenie = new JButton("Informacje o zleceniu");
+		GridBagConstraints gbc_btnInfoZlecenie = new GridBagConstraints();
+		gbc_btnInfoZlecenie.insets = new Insets(0, 0, 5, 0);
+		gbc_btnInfoZlecenie.gridx = 1;
+		gbc_btnInfoZlecenie.gridy = 4;
+		panelSerwisZ.add(btnInfoZlecenie, gbc_btnInfoZlecenie);
+		
+		JButton btnWolneZlecenia = new JButton("Lista wolnych zlecen");
+		GridBagConstraints gbc_btnWolneZlecenia = new GridBagConstraints();
+		gbc_btnWolneZlecenia.gridx = 1;
+		gbc_btnWolneZlecenia.gridy = 5;
+		panelSerwisZ.add(btnWolneZlecenia, gbc_btnWolneZlecenia);
+		
+		btnWolneZlecenia.addActionListener(new ListUnassignedOrders(orders,frmSerwis,tableOrders));
+		btnInfoZlecenie.addActionListener(new DisplayOrderInfo(orders,frmSerwis,tableOrders));
 		
 		JPanel panelSerwisNz = new JPanel();
 		cardPanel.add(panelSerwisNz, "panelSerwisNz");

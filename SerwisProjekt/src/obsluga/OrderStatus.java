@@ -4,6 +4,7 @@ public enum OrderStatus {
 	INPROGRESS("in_progress"),
 	FINISHED("finished"),
 	NOTSTARTED("not_started"),
+	IMPOSSIBLE("impossible"),
 	UNKNOWN("unknown");
 	
 	private String status = "";
